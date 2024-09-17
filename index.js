@@ -1,20 +1,13 @@
+import { Converter } from "./converter.js"
 
-import fs from 'fs';
+// Example usage:
+const converter = new Converter()
+const inputFilePath = './converter.js' // Path to the input text file
+const outputFilePath = './output.md' // Path to the output Markdown file
 
-export class Converter {
+// Read the content from the text file
+const textContent = converter.readTextFile(inputFilePath)
 
-    readTextFile(file) {
-        const text = fs.readFileSync(file, 'utf8');
+// Write the content to the Markdown file
+converter.writeMdFile(outputFilePath, textContent)
 
-        console.log(text);
-        return text
-    }
-
-    writeMdFile(file, text) {
-
-    }
-}
-
-const converter = new Converter();
-const filePath = './test.txt';
-converter.readTextFile(filePath);
