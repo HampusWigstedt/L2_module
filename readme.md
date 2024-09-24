@@ -7,7 +7,7 @@ We also want a fast way to implement file convertion into any program.
 
 
 
-Launch app in bash terminal: curl -X POST -F 
+Launch app in bash terminal
 
 Test on remote PC - node client.js path/to/your/file.mp4 192.168.1.127 3000
 
