@@ -1,5 +1,7 @@
-import MP4ToMP3Converter from './server.js';
+import Server from './server.js'
+import Converter from './converter.js'
 
 // Create an instance of the converter and start the server
-const converter = new MP4ToMP3Converter();
-converter.startServer(3000);
+const converter = new Converter()
+const server = new Server()
+server.startServer(3000)
