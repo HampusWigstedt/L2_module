@@ -28,7 +28,7 @@ class Converter {
                 console.error('Output file is empty');
                 return res.status(500).send('Conversion resulted in an empty file')
             }
-            Converter.sendFileToClient(outputFilePath, filePath, res)
+            this.sendFileToClient(outputFilePath, filePath, res)
         });
     }
 
@@ -43,4 +43,4 @@ class Converter {
     }
 }
 
-export default Converter;
+export default Converter

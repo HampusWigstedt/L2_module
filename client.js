@@ -4,7 +4,7 @@ import fs from 'fs'
 
 // Function to convert the specified file
 async function convertFile(filePath, serverHost, serverPort) {
-    const form = new FormData();
+    const form = new FormData()
     form.append('file', fs.createReadStream(filePath))
 
     try {
@@ -30,15 +30,41 @@ async function convertFile(filePath, serverHost, serverPort) {
     }
 }
 
-// Get the file path from command line arguments
-const filePath = process.argv[2];
-const serverHost = process.argv[3] || 'localhost'
-const serverPort = process.argv[4] || 3000
+// Function to get metadata of the specified file
+async function getMetadata(filePath, serverHost, serverPort) {
+    const form = new FormData()
+    form.append('file', fs.createReadStream(filePath))
 
-if (!filePath) {
-    console.error('Please provide a file path to convert.')
+    try {
+        console.log(`Sending request to http://${serverHost}:${serverPort}/metadata`);
+        const response = await axios.post(`http://${serverHost}:${serverPort}/metadata`, form, {
+            headers: form.getHeaders()
+        });
+
+        console.log('Metadata:', response.data)
+    } catch (err) {
+        console.error('Error retrieving metadata:', err)
+    }
+}
+
+// Get the action, file path, server host, and server port from command line arguments
+const action = process.argv[2]
+const filePath = process.argv[3]
+const serverHost = process.argv[4] || 'localhost'
+const serverPort = process.argv[5] || 3000
+
+if (!action || !filePath) {
+    console.error('Usage: node client.js <action> <file-path> <server-host> <server-port>')
+    console.error('Actions: convert, metadata')
     process.exit(1)
 }
 
-// Convert the specified file
-convertFile(filePath, serverHost, serverPort)
+// Perform the specified action
+if (action === 'convert') {
+    convertFile(filePath, serverHost, serverPort)
+} else if (action === 'metadata') {
+    getMetadata(filePath, serverHost, serverPort)
+} else {
+    console.error('Invalid action. Use "convert" or "metadata".')
+    process.exit(1)
+}
