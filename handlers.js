@@ -47,46 +47,30 @@ class FileHandler {
 
     handleChangeAudioChannel(req, res) {
         const filePath = req.file.path;
-        const intermediateFilePath = path.join('uploads', `${req.file.filename}_intermediate.wav`);
         const outputFilePath = path.join('uploads', `${req.file.filename}_surround.m4a`);
 
         console.log(`Changing audio channels to surround sound for ${filePath}`);
 
-        // Step 1: Convert MP3 to WAV
-        const convertToWavCommand = `ffmpeg -i ${filePath} -y ${intermediateFilePath}`;
-        console.log(`Spawned FFmpeg with command: ${convertToWavCommand}`);
-
-        exec(convertToWavCommand, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Error during WAV conversion: ${error}`);
-                console.error(`FFmpeg stderr: ${stderr}`);
-                res.status(500).send('WAV conversion error');
-                return;
-            }
-
-            console.log(`FFmpeg stdout: ${stdout}`);
-
-            // Step 2: Convert WAV to surround sound M4A
-            const convertToSurroundCommand = `ffmpeg -i ${intermediateFilePath} -y -ac 6 -c:a aac ${outputFilePath}`;
-            console.log(`Spawned FFmpeg with command: ${convertToSurroundCommand}`);
-
-            exec(convertToSurroundCommand, (error, stdout, stderr) => {
-                if (error) {
-                    console.error(`Error during surround sound conversion: ${error}`);
-                    console.error(`FFmpeg stderr: ${stderr}`);
-                    res.status(500).send('Surround sound conversion error');
-                    return;
-                }
-
-                console.log(`FFmpeg stdout: ${stdout}`);
+        this.metaData.changeAudioChannel(
+            filePath,
+            outputFilePath,
+            (progress) => {
+                console.log(`Processing: ${progress.percent}% done`);
+            },
+            (outputFilePath, filePath) => {
+                console.log(`Conversion complete: ${outputFilePath}`);
                 res.download(outputFilePath, (err) => {
                     if (err) {
                         console.error(`Error sending file: ${err}`);
                         res.status(500).send('Error sending file');
                     }
                 });
-            });
-        });
+            },
+            (error) => {
+                console.error(`Error during surround sound conversion: ${error}`);
+                res.status(500).send('Surround sound conversion error');
+            }
+        );
     }
 
 }
