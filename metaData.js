@@ -12,6 +12,22 @@ class MetaData {
             onMetaData(metadata)
         });
     }
+
+    changeAudioChannel(filePath, outputFilePath, onProgress, onComplete, onError) {
+        ffmpeg(filePath)
+            .audioCodec('aac') // Use the AAC codec
+            .audioChannels(6)
+            .on('start', (commandLine) => {
+                console.log(`Spawned FFmpeg with command: ${commandLine}`);
+            })
+            .on('progress', onProgress)
+            .on('end', () => {
+                console.log(`Conversion complete: ${outputFilePath}`);
+                onComplete(outputFilePath, filePath);
+            })
+            .on('error', onError)
+            .save(outputFilePath);
+    }
 }
 
 export default MetaData
