@@ -18,15 +18,15 @@ class MetaData {
             .audioCodec('aac') // Use the AAC codec
             .audioChannels(6)
             .on('start', (commandLine) => {
-                console.log(`Spawned FFmpeg with command: ${commandLine}`);
+                console.log(`Spawned FFmpeg with command: ${commandLine}`)
             })
             .on('progress', onProgress)
             .on('end', () => {
-                console.log(`Conversion complete: ${outputFilePath}`);
+                console.log(`Conversion complete: ${outputFilePath}`)
                 onComplete(outputFilePath, filePath);
             })
             .on('error', onError)
-            .save(outputFilePath);
+            .save(outputFilePath)
     }
 }
 
