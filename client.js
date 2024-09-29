@@ -99,11 +99,4 @@ class Client {
     }
 }
 
-// Example usage
-const client = new Client('localhost', 3000)
-client.setFilePath('resized.mp4')
-
-// Perform actions
-// client.convertFile()
-client.getMetadata()
-// client.changeAudioChannel()
+export default Client
