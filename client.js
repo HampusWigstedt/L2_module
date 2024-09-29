@@ -101,9 +101,9 @@ class Client {
 
 // Example usage
 const client = new Client('localhost', 3000)
-client.setFilePath('test.mp4')
+client.setFilePath('resized.mp4')
 
 // Perform actions
-client.convertFile()
+// client.convertFile()
 client.getMetadata()
-client.changeAudioChannel()
+// client.changeAudioChannel()
