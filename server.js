@@ -3,14 +3,15 @@ import multer from 'multer'
 import Converter from './converter.js'
 import MetaData from './metaData.js'
 import FileHandler from './handlers.js'
+import resizeVideo from './resizeVideo.js'
 
 class Server {
     constructor() {
         this.app = express()
         this.upload = multer({ dest: 'uploads/' })
-        this.converter = new Converter()
-        this.metaData = new MetaData()
-        this.fileHandler = new FileHandler(this.converter, this.metaData)
+        // this.converter = new Converter()
+        // this.metaData = new MetaData()
+        // this.fileHandler = new FileHandler(this.converter, this.metaData)
         this.setupRoutes()
     }
 
@@ -19,6 +20,7 @@ class Server {
         this.app.post('/convert', this.upload.single('file'), this.fileHandler.handleFileConversion.bind(this.fileHandler))
         this.app.post('/metadata', this.upload.single('file'), this.fileHandler.handleFileMetadata.bind(this.fileHandler))
         this.app.post('/changeAudioChannel', this.upload.single('file'), this.fileHandler.handleChangeAudioChannel.bind(this.fileHandler))
+        this.app.post('/resize', this.upload.single('file'), this.fileHandler.handleResizeVideo.bind(this))
     }
 
     handleRootRequest(req, res) {

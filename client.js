@@ -97,6 +97,42 @@ class Client {
             console.error('Error making API request:', err)
         }
     }
+
+    async resizeVideo(width, height) {
+        if (!this.filePath) {
+            console.error('File path is not set.')
+            return
+        }
+
+        const form = new FormData()
+        form.append('file', fs.createReadStream(this.filePath))
+        form.append('width', width)
+        form.append('height', height)
+
+        try {
+            const response = await axios.post(`http://${this.serverHost}:${this.serverPort}/resize`, form, {
+                headers: form.getHeaders(),
+                responseType: 'stream'
+            })
+
+            // Save the response to a file
+            const outputFilePath = `resized_${this.filePath}`
+            const writer = fs.createWriteStream(outputFilePath)
+            response.data.pipe(writer)
+
+            writer.on('finish', () => {
+                console.log(`File successfully downloaded and saved as ${outputFilePath}`)
+            })
+
+            writer.on('error', (err) => {
+                console.error('Error writing file:', err)
+            })
+        } catch (err) {
+            console.error('Error making API request:', err)
+        }
+    }
+
+    
 }
 
 export default Client
