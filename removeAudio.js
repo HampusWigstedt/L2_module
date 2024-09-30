@@ -10,12 +10,12 @@ class AudioRemover {
 
     removeAudio() {
         // Ensure the output directory exists
-        const outputDir = path.dirname(this.outputFilePath)
-        if (!fs.existsSync(outputDir)) {
-            console.log(`Creating output directory: ${outputDir}`)
-            fs.mkdirSync(outputDir, { recursive: true })
+        const outputDirectory = path.dirname(this.outputFilePath)
+        if (!fs.existsSync(outputDirectory)) {
+            console.log(`Creating output directory: ${outputDirectory}`)
+            fs.mkdirSync(outputDirectory, { recursive: true })
         } else {
-            console.log(`Output directory already exists: ${outputDir}`)
+            console.log(`Output directory already exists: ${outputDirectory}`)
         }
 
         ffmpeg(this.inputFilePath)

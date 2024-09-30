@@ -1,26 +1,40 @@
 import express from 'express'
 import multer from 'multer'
+import path from 'path'
 import Converter from './converter.js'
 import MetaData from './metaData.js'
 import FileHandler from './handlers.js'
-import resizeVideo from './resizeVideo.js'
+
+// Configure multer storage
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/')
+    },
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname)
+        cb(null, `${file.fieldname}-${Date.now()}${ext}`)
+    }
+})
+
+const upload = multer({ storage: storage })
 
 class Server {
     constructor() {
         this.app = express()
-        this.upload = multer({ dest: 'uploads/' })
-        // this.converter = new Converter()
-        // this.metaData = new MetaData()
-        // this.fileHandler = new FileHandler(this.converter, this.metaData)
+        this.upload = upload
+        this.converter = new Converter()
+        this.metaData = new MetaData()
+        this.fileHandler = new FileHandler(this.converter, this.metaData)
         this.setupRoutes()
     }
 
     setupRoutes() {
-        this.app.get('/', this.handleRootRequest.bind(this));
+        this.app.get('/', this.handleRootRequest.bind(this))
         this.app.post('/convert', this.upload.single('file'), this.fileHandler.handleFileConversion.bind(this.fileHandler))
         this.app.post('/metadata', this.upload.single('file'), this.fileHandler.handleFileMetadata.bind(this.fileHandler))
         this.app.post('/changeAudioChannel', this.upload.single('file'), this.fileHandler.handleChangeAudioChannel.bind(this.fileHandler))
-        this.app.post('/resize', this.upload.single('file'), this.fileHandler.handleResizeVideo.bind(this))
+        this.app.post('/resize', this.upload.single('file'), this.fileHandler.handleResizeVideo.bind(this.fileHandler))
+        this.app.post('/removeaudio', this.upload.single('file'), this.fileHandler.handleRemoveAudio.bind(this.fileHandler))
     }
 
     handleRootRequest(req, res) {

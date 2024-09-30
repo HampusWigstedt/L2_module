@@ -4,14 +4,15 @@ import AudioRemover from './removeAudio.js'
 // Example usage
 
 const client = new Client('localhost', 3000)
-client.setFilePath('output_surround.mp3')
+client.setFilePath('test.mp4')
 
 // Perform actions
 
 // client.convertFile()
-client.getMetadata()
+// client.getMetadata()
 // client.changeAudioChannel()
-// client.resizeVideo(720, 480)
+// client.resizeVideo(480, 320)
+client.removeAudio()
 
 // Example usage for removing audio
 // const videoFilePath = 'test.mp4'
