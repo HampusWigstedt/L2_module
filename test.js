@@ -11,12 +11,5 @@ client.setFilePath('test.mp4')
 // client.convertFile()
 // client.getMetadata()
 // client.changeAudioChannel()
-// client.resizeVideo(480, 320)
-client.removeAudio()
-
-// Example usage for removing audio
-// const videoFilePath = 'test.mp4'
-// const outputFilePath = 'output/noAudio.mp4'
-
-// const remover = new AudioRemover(videoFilePath, outputFilePath)
-// remover.removeAudio()
+client.resizeVideo(480, 320)
+// client.removeAudio()

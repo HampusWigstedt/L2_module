@@ -112,7 +112,7 @@ class Client {
         try {
             const response = await axios.post(`http://${this.serverHost}:${this.serverPort}/resize`, form, {
                 headers: form.getHeaders(),
-                responseType: 'stream'
+                responseType: 'stream' // Ensure responseType is set to stream
             })
 
             // Save the response to a file

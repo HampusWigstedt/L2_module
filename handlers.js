@@ -1,5 +1,6 @@
 import path from 'path'
 import { exec } from 'child_process'
+import VideoResizer from './resizeVideo.js'
 
 class FileHandler {
     constructor(converter, metaData) {
@@ -80,30 +81,27 @@ class FileHandler {
 
         console.log(`Resizing video ${filePath} to ${width}x${height}`)
 
-        if (!width || !height) {
-            console.error('Width and height must be specified.')
-            return res.status(400).send('Width and height must be specified.')
-        }
-
-        if (isNaN(width) || isNaN(height)) {
-            console.error('Width and height must be numbers.')
-            return res.status(400).send('Width and height must be numbers.')
-        }
-
-        if (width <= 0 || height <= 0) {
-            console.error('Width and height must be positive numbers.')
-            return res.status(400).send('Width and height must be positive numbers.')
-        }
-
-        exec(`ffmpeg -i ${filePath} -vf scale=${width}:${height} ${outputFilePath}`, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Error resizing video: ${error.message}`)
-                return res.status(500).send('Error resizing video')
+        const videoResizer = new VideoResizer(filePath, outputFilePath, width, height)
+        videoResizer.resize(
+            (outputFilePath) => {
+                res.download(outputFilePath, (err) => {
+                    if (err) {
+                        console.error('Error sending file:', err)
+                        res.status(500).send('Error sending file')
+                    } else {
+                        // Delete the temporary file after sending it
+                        fs.unlink(outputFilePath, (unlinkErr) => {
+                            if (unlinkErr) {
+                                console.error('Error deleting file:', unlinkErr)
+                            }
+                        })
+                    }
+                })
+            },
+            (err) => {
+                res.status(400).send(err.message)
             }
-            
-            console.log(`Video successfully resized and saved as ${outputFilePath}`)
-            res.send(`Video successfully resized and saved as ${outputFilePath}`)
-        })
+        )
     }
 
     handleRemoveAudio(req, res) {
