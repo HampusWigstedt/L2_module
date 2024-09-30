@@ -1,6 +1,8 @@
 import path from 'path'
 import { exec } from 'child_process'
 import VideoResizer from './resizeVideo.js'
+import AudioRemover from './removeAudio.js'
+import fs from 'fs'
 
 class FileHandler {
     constructor(converter, metaData) {
@@ -106,19 +108,39 @@ class FileHandler {
 
     handleRemoveAudio(req, res) {
         const filePath = req.file.path
-        const outputFilePath = path.join('uploads', `no_audio_${req.file.originalname}`)
+        const outputFilePath = path.join('uploads', `noaudio_${req.file.originalname}`)
 
-        console.log(`Removing audio from ${filePath}`)
+        console.log(`Removing audio from video ${filePath}`)
 
-        exec(`ffmpeg -i ${filePath} -an ${outputFilePath}`, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Error removing audio: ${error.message}`)
-                return res.status(500).send('Error removing audio')
+        const audioRemover = new AudioRemover(filePath, outputFilePath)
+        audioRemover.removeAudio(
+            (outputFilePath) => {
+                // Set headers for file download
+                res.setHeader('Content-Disposition', `attachment; filename="noaudio_${path.basename(outputFilePath)}"`)
+                res.setHeader('Content-Type', 'video/mp4')
+                res.setHeader('Content-Length', fs.statSync(outputFilePath).size)
+
+                const readStream = fs.createReadStream(outputFilePath)
+                readStream.pipe(res)
+
+                readStream.on('end', () => {
+                    // Delete the temporary file after sending it
+                    fs.unlink(outputFilePath, (unlinkErr) => {
+                        if (unlinkErr) {
+                            console.error('Error deleting file:', unlinkErr)
+                        }
+                    })
+                })
+
+                readStream.on('error', (err) => {
+                    console.error('Error reading file:', err)
+                    res.status(500).send('Error reading file')
+                })
+            },
+            (err) => {
+                res.status(400).send(err.message)
             }
-
-            console.log(`Audio successfully removed and saved as ${outputFilePath}`)
-            res.send(`Audio successfully removed and saved as ${outputFilePath}`)
-        })
+        )
     }
 
 }

@@ -17,6 +17,7 @@ class VideoResizer {
 
         ffmpeg(this.inputFilePath)
             .size(`${this.width}x${this.height}`)
+            .outputOptions('-movflags', 'faststart') // Ensure moov atom is at the beginning of the file for streaming
             .output(this.outputFilePath)
             .on('end', () => {
                 console.log(`Video successfully resized and saved as ${this.outputFilePath}`)

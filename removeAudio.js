@@ -1,5 +1,3 @@
-import fs from 'fs'
-import path from 'path'
 import ffmpeg from 'fluent-ffmpeg'
 
 class AudioRemover {
@@ -8,27 +6,22 @@ class AudioRemover {
         this.outputFilePath = outputFilePath
     }
 
-    removeAudio() {
-        // Ensure the output directory exists
-        const outputDirectory = path.dirname(this.outputFilePath)
-        if (!fs.existsSync(outputDirectory)) {
-            console.log(`Creating output directory: ${outputDirectory}`)
-            fs.mkdirSync(outputDirectory, { recursive: true })
-        } else {
-            console.log(`Output directory already exists: ${outputDirectory}`)
-        }
+    removeAudio(onSuccess, onError) {
 
         ffmpeg(this.inputFilePath)
             .noAudio()
+            .outputOptions('-movflags', 'faststart') // Ensure moov atom is at the beginning of the file for streaming
             .output(this.outputFilePath)
             .on('start', (commandLine) => {
                 console.log(`Spawned FFmpeg with command: ${commandLine}`)
             })
             .on('end', () => {
                 console.log(`Audio successfully removed and saved as ${this.outputFilePath}`)
+                onSuccess(this.outputFilePath)
             })
             .on('error', (err) => {
                 console.error('Error removing audio:', err.message)
+                onError(err)
             })
             .run()
     }
