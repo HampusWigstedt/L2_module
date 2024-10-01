@@ -32,7 +32,7 @@ class Server {
         this.app.get('/', this.handleRootRequest.bind(this))
         this.app.post('/convert', this.upload.single('file'), this.fileHandler.handleFileConversion.bind(this.fileHandler))
         this.app.post('/metadata', this.upload.single('file'), this.fileHandler.handleFileMetadata.bind(this.fileHandler))
-        this.app.post('/changeAudioChannel', this.upload.single('file'), this.fileHandler.handleChangeAudioChannel.bind(this.fileHandler))
+        this.app.post('/StereoToSurround', this.upload.single('file'), this.fileHandler.handleStereoToSurround.bind(this.fileHandler))
         this.app.post('/resize', this.upload.single('file'), this.fileHandler.handleResizeVideo.bind(this.fileHandler))
         this.app.post('/removeaudio', this.upload.single('file'), this.fileHandler.handleRemoveAudio.bind(this.fileHandler))
     }

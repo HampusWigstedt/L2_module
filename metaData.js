@@ -13,7 +13,7 @@ class MetaData {
         });
     }
 
-    changeAudioChannel(filePath, outputFilePath, onProgress, onComplete, onError) {
+    StereoToSurround(filePath, outputFilePath, onProgress, onComplete, onError) {
         ffmpeg(filePath)
             .audioCodec('aac') // Use the AAC codec
             .audioChannels(6)

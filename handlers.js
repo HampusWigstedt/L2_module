@@ -1,5 +1,4 @@
 import path from 'path'
-import { exec } from 'child_process'
 import VideoResizer from './resizeVideo.js'
 import AudioRemover from './removeAudio.js'
 import fs from 'fs'
@@ -48,13 +47,13 @@ class FileHandler {
         });
     }
 
-    handleChangeAudioChannel(req, res) {
+    handleStereoToSurround(req, res) {
         const filePath = req.file.path;
         const outputFilePath = path.join('uploads', `${req.file.filename}_surround.m4a`)
 
         console.log(`Changing audio channels to surround sound for ${filePath}`)
 
-        this.metaData.changeAudioChannel(
+        this.metaData.StereoToSurround(
             filePath,
             outputFilePath,
             (progress) => {
