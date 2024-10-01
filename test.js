@@ -1,5 +1,4 @@
 import Client from './client.js'
-import AudioRemover from './removeAudio.js'
 
 // Example usage
 
