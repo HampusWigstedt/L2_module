@@ -1,12 +1,14 @@
 import path from 'path'
 import VideoResizer from './resizeVideo.js'
 import AudioRemover from './removeAudio.js'
+import FileDeleter from './deleteTempFiles.js'
 import fs from 'fs'
 
 class FileHandler {
     constructor(converter, metaData) {
         this.converter = converter
         this.metaData = metaData
+        this.fileDeleter = new FileDeleter()
     }
 
     handleFileConversion(req, res) {
@@ -40,6 +42,7 @@ class FileHandler {
             if (metadata) {
                 console.log('Metadata retrieved successfully:', metadata)
                 res.json(metadata)
+                this.fileDeleter.deleteAllFiles()
             } else {
                 console.error('Failed to retrieve metadata.')
                 res.status(500).send('Failed to retrieve metadata.')
@@ -89,13 +92,6 @@ class FileHandler {
                     if (err) {
                         console.error('Error sending file:', err)
                         res.status(500).send('Error sending file')
-                    } else {
-                        // Delete the temporary file after sending it
-                        fs.unlink(outputFilePath, (unlinkErr) => {
-                            if (unlinkErr) {
-                                console.error('Error deleting file:', unlinkErr)
-                            }
-                        })
                     }
                 })
             },
@@ -121,15 +117,6 @@ class FileHandler {
 
                 const readStream = fs.createReadStream(outputFilePath)
                 readStream.pipe(res)
-
-                readStream.on('end', () => {
-                    // Delete the temporary file after sending it
-                    fs.unlink(outputFilePath, (unlinkErr) => {
-                        if (unlinkErr) {
-                            console.error('Error deleting file:', unlinkErr)
-                        }
-                    })
-                })
 
                 readStream.on('error', (err) => {
                     console.error('Error reading file:', err)

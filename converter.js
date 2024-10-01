@@ -1,7 +1,11 @@
 import ffmpeg from 'fluent-ffmpeg'
 import fs from 'fs'
+import FileDeleter from './deleteTempFiles.js'
 
 class Converter {
+    constructor() {
+        this.fileDeleter = new FileDeleter()
+    }
     convertToMP3(filePath, outputFilePath, onProgress, onComplete, onError) {
         ffmpeg(filePath)
             .toFormat('mp3')
@@ -12,6 +16,7 @@ class Converter {
             .on('end', () => {
                 console.log(`Conversion complete: ${outputFilePath}`)
                 onComplete(outputFilePath, filePath)
+                this.fileDeleter.deleteAllFiles()
             })
             .on('error', onError)
             .save(outputFilePath)

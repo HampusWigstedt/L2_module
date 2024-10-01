@@ -1,7 +1,12 @@
 import ffmpeg from 'fluent-ffmpeg'
+import FileDeleter from './deleteTempFiles.js'
 
 
 class MetaData {
+    constructor() {
+        this.fileDeleter = new FileDeleter()
+    }
+
     getMetaData(filePath, onMetaData) {
         ffmpeg.ffprobe(filePath, (err, metadata) => {
             if (err) {
@@ -23,6 +28,7 @@ class MetaData {
             .on('end', () => {
                 console.log(`Conversion complete: ${outputFilePath}`)
                 onComplete(outputFilePath, filePath);
+                this.fileDeleter.deleteAllFiles()
             })
             .on('error', onError)
             .save(outputFilePath)

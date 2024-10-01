@@ -21,6 +21,8 @@ const upload = multer({ storage: storage })
 class Server {
     constructor() {
         this.app = express()
+        this.app.use(express.json({ limit: '100mb' }))
+        this.app.use(express.urlencoded({ limit: '100mb', extended: true }))
         this.upload = upload
         this.converter = new Converter()
         this.metaData = new MetaData()
