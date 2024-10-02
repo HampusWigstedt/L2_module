@@ -9,7 +9,6 @@ class AudioRemover {
         this.fileDeleter = new FileDeleter()
     }
 
-    // Method to remove audio from the video file
     removeAudio(onSuccess, onError) {
         
         ffmpeg(this.inputFilePath)

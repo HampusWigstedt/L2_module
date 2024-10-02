@@ -128,7 +128,6 @@ class FileHandler {
             }
         )
     }
-
 }
 
 export default FileHandler;
