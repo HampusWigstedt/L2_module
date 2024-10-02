@@ -30,7 +30,7 @@ class FileHandler {
                 console.error(`Error during conversion: ${err}`)
                 res.status(500).send('Conversion error')
             }
-        );
+        )
     }
 
     handleFileMetadata(req, res) {
@@ -47,7 +47,7 @@ class FileHandler {
                 console.error('Failed to retrieve metadata.')
                 res.status(500).send('Failed to retrieve metadata.')
             }
-        });
+        })
     }
 
     handleStereoToSurround(req, res) {
@@ -115,8 +115,8 @@ class FileHandler {
                 res.setHeader('Content-Type', 'video/mp4')
                 res.setHeader('Content-Length', fs.statSync(outputFilePath).size)
 
-                const readStream = fs.createReadStream(outputFilePath)
-                readStream.pipe(res)
+                const readStream = fs.createReadStream(outputFilePath) // Creating a read stream for the output file
+                readStream.pipe(res) // Piping the read stream to the response
 
                 readStream.on('error', (err) => {
                     console.error('Error reading file:', err)

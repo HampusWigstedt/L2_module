@@ -104,7 +104,7 @@ This test covers the 5 implementations.
 > The file is downsized to 480x320 resolution
 
 > #### Outcome
-> The file is downsized as shown in below image.
+>The file is downsized as shown in below image.
 > ![Codec mp3](public/resize.png) 
 
 ## TC5 Verify that an mp4 file's audio can be removed.

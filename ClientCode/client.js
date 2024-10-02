@@ -3,7 +3,7 @@ import FormData from 'form-data'
 import fs from 'fs'
 
 class Client {
-    constructor(serverHost, serverPort) {
+    constructor(serverHost = 'localhost', serverPort = 3000) {
         this.serverHost = serverHost
         this.serverPort = serverPort
     }
@@ -13,7 +13,7 @@ class Client {
         form.append('file', fs.createReadStream(filePath))
 
         try {
-            const response = await axios.post(`http://${this.serverHost}:${this.serverPort}/convert`, form, {
+            const response = await axios.post(`https://cscloud6-195.lnu.se/hmus/convert`, form, {
                 headers: form.getHeaders(),
                 responseType: 'stream'
             })
@@ -40,8 +40,7 @@ class Client {
         form.append('file', fs.createReadStream(filePath))
 
         try {
-            console.log(`Sending request to http://${this.serverHost}:${this.serverPort}/metadata`)
-            const response = await axios.post(`http://${this.serverHost}:${this.serverPort}/metadata`, form, {
+            const response = await axios.post(`https://cscloud6-195.lnu.se/hmus/metadata`, form, {
                 headers: form.getHeaders()
             })
 
@@ -56,7 +55,7 @@ class Client {
         form.append('file', fs.createReadStream(filePath))
 
         try {
-            const response = await axios.post(`http://${this.serverHost}:${this.serverPort}/StereoToSurround`, form, {
+            const response = await axios.post(`https://cscloud6-195.lnu.se/hmus/StereoToSurround`, form, {
                 headers: form.getHeaders(),
                 responseType: 'stream'
             })
@@ -85,7 +84,7 @@ class Client {
         form.append('height', height)
 
         try {
-            const response = await axios.post(`http://${this.serverHost}:${this.serverPort}/resize`, form, {
+            const response = await axios.post(`https://cscloud6-195.lnu.se/hmus/resize`, form, {
                 headers: form.getHeaders(),
                 responseType: 'stream' // Ensure responseType is set to stream
             })
@@ -112,7 +111,7 @@ class Client {
         form.append('file', fs.createReadStream(filePath))
 
         try {
-            const response = await axios.post(`http://${this.serverHost}:${this.serverPort}/removeaudio`, form, {
+            const response = await axios.post(`https://cscloud6-195.lnu.se/hmus/removeaudio`, form, {
                 headers: form.getHeaders(),
                 responseType: 'stream'
             })

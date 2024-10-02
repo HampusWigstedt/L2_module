@@ -16,7 +16,7 @@ class Converter {
             .on('end', () => {
                 console.log(`Conversion complete: ${outputFilePath}`)
                 onComplete(outputFilePath, filePath)
-                this.fileDeleter.deleteAllFiles()
+                this.fileDeleter.deleteAllFiles() // Deleting all temporary files
             })
             .on('error', onError)
             .save(outputFilePath)

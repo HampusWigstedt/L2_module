@@ -2,7 +2,7 @@ import Client from './client.js'
 
 // Example usage
 
-const client = new Client('localhost', 3000)
+const client = new Client()
 
 // Perform actions
 
@@ -10,4 +10,4 @@ const client = new Client('localhost', 3000)
 // client.getMetadata()
 // client.StereoToSurround()
 // client.resizeVideo(480, 320)
-// client.removeAudio(test.mp3)
+// client.removeAudio()

@@ -11,12 +11,31 @@ When server is running, any computer with a reach to the api can access the meth
 
 ## Install
 
-1. Download EasyFFM Client from the github repository.
+### Client Usage
+
+1. Download EasyFFM ClientCode folder from the github repository.
 
 2. Install dependencies with npm install in the console.
 
 ```javascript
 npm install
+```
+
+### Host the API localy
+
+1. Download the EasyFFM repository.
+
+2. Install dependencies with npm install in the console.
+
+3. If convertion on same pc. Use below. Port can be specified in index.js file.
+
+```javascript
+const client = new Client('localhost', port)
+```
+4. If convertion on another pc on the same network, find your ipv4 adress and use below. Port can be specified in index.js file.
+
+```javascript
+const client = new Client('ipv4', port)
 ```
 
 ## Usage
@@ -25,7 +44,7 @@ npm install
 2. Create a instance of the client program
 
 ```javascript
-const client = new Client('localhost', 3000)
+const client = new Client()
 ```
 
 3. Call methods to change your files

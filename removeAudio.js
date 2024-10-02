@@ -1,7 +1,7 @@
 import ffmpeg from 'fluent-ffmpeg'
 import FileDeleter from './deleteTempFiles.js'
 
-// Class to handle audio removal from a video file
+
 class AudioRemover {
     constructor(inputFilePath, outputFilePath) {
         this.inputFilePath = inputFilePath
@@ -24,7 +24,7 @@ class AudioRemover {
             .on('end', () => {
                 console.log(`Audio successfully removed and saved as ${this.outputFilePath}`)
                 onSuccess(this.outputFilePath)
-                this.fileDeleter.deleteAllFiles()
+                this.fileDeleter.deleteAllFiles() // Delete all temporary files
             })
 
             .on('error', (err) => {

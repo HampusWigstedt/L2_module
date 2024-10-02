@@ -8,11 +8,11 @@ import FileHandler from './handlers.js'
 // Configure multer storage
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/')
+        cb(null, 'uploads/') // Setting the destination directory for uploaded files
     },
     filename: (req, file, cb) => {
         const ext = path.extname(file.originalname)
-        cb(null, `${file.fieldname}-${Date.now()}${ext}`)
+        cb(null, `${file.fieldname}-${Date.now()}${ext}`) // Setting the filename with a timestamp
     }
 })
 
@@ -21,8 +21,8 @@ const upload = multer({ storage: storage })
 class Server {
     constructor() {
         this.app = express()
-        this.app.use(express.json({ limit: '100mb' }))
-        this.app.use(express.urlencoded({ limit: '100mb', extended: true }))
+        this.app.use(express.json({ limit: '100mb' })) // Adding middleware to parse JSON requests with a size limit
+        this.app.use(express.urlencoded({ limit: '100mb', extended: true })) // Adding middleware to parse URL-encoded requests with a size limit
         this.upload = upload
         this.converter = new Converter()
         this.metaData = new MetaData()

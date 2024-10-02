@@ -25,7 +25,7 @@ class VideoResizer {
             .on('end', () => {
                 console.log(`Video successfully resized and saved as ${this.outputFilePath}`)
                 onSuccess(this.outputFilePath)
-                this.fileDeleter.deleteAllFiles()
+                this.fileDeleter.deleteAllFiles() // Delete all temporary files
             })
             .on('error', (err) => {
                 console.error('Error resizing video:', err)

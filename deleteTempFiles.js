@@ -6,7 +6,7 @@ class FileDeleter {
         this.directory = 'uploads'
     }
 
-    // Method to delete all files in the directory
+    // Method to delete all files in the uploads(temp) directory
     async deleteAllFiles() {
         try {
             // Read all files in the directory
