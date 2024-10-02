@@ -38,6 +38,8 @@ const client = new Client('localhost', port)
 const client = new Client('ipv4', port)
 ```
 
+5. Install ffmpeg on your system. 
+
 ## Usage
 
 1. Install the client code
@@ -89,6 +91,10 @@ EasyFFM is written in Javascript (ES6)
 The client code have dependencies towards Axios as the client code has Axios calls that automatically sends requests to the api when the methods are launched.
 The program also utilizes 'fs' and 'form-data' for file management.
 
+The server side of the project is dependent on ffmpeg and fluent-ffmpeg. ffmpeg for the actions of the program & fluent-ffmpeg for the .on methods that make it easier for actions and logs at different points in the convertion process. 
+
+Express is used for the web framework and Multer is used for uploading files through express. 
+
 ## Version
 
 The current version of EasyFFM is '1.0.0'
@@ -119,4 +125,4 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENSE) fi
 
 ## Writers Note
 
-EasyFFM was developed for the course "Introduction to software quality" at Linnéus University. The assignment impied that the student should create a Lib or Web-api that could help other programmers in their work. The projects goal was to make it easier to manipulate video and sound files when handeling and changing these types of files.
+EasyFFM was developed for the course "Introduction to software quality" at Linnéus University. The assignment implied that the student should create a Lib or Web-api that could help other programmers in their work. The projects goal was to make it easier to manipulate video and sound files when handeling and changing these types of files.

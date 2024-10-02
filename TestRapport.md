@@ -26,14 +26,14 @@ The goal of this document is to provide an overview of the testing in the 1.0.0 
 
 This test covers the 5 implementations.
 
-| Test | Description | Status | Comment |
+| Test | Description | Test method | Comment |
 |------|-------------|:------:|:-------:|
-| TC1 | Verify that an mp4 file can be converted to an mp3 file. | 1/OK | 0 |
-| TC2 | Verify that an mp3 file's metadata can be shown. | 1/OK | 0 |
-| TC3 | Verify that an mp3 file with stereo sound can be converted into an mp3 file with surround sound. | 1/OK | 0 |
-| TC4 | Verify that an mp4 video can be downsized by resolution. | 1/OK | 0 |
-| TC5 | Verify that an mp4 file's audio can be removed. | 1/OK | 0 |
-| COVERAGE & SUCCESS | 5/OK | 0 |
+| TC1 | Verify that an mp4 file can be converted to an mp3 file. | Manual Test | OK |
+| TC2 | Verify that an mp3 file's metadata can be shown. | Manual Test | OK |
+| TC3 | Verify that an mp3 file with stereo sound can be converted into an mp3 file with surround sound. | Manual Test | OK |
+| TC4 | Verify that an mp4 video can be downsized by resolution. | Manual Test | OK |
+| TC5 | Verify that an mp4 file's audio can be removed. | Manual Test | OK |
+| COVERAGE & SUCCESS |  | 5/5 | OK |
 
 **Improvements**:
 
