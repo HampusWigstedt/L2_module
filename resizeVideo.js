@@ -1,54 +1,65 @@
-import ffmpeg from 'fluent-ffmpeg'
-import FileDeleter from './deleteTempFiles.js'
-
+import ffmpeg from 'fluent-ffmpeg';
+import FileDeleter from './deleteTempFiles.js';
 
 class VideoResizer {
     constructor(inputFilePath, outputFilePath, width, height) {
-        this.inputFilePath = inputFilePath
-        this.outputFilePath = outputFilePath
-        this.width = width
-        this.height = height
-        this.fileDeleter = new FileDeleter()
+        this.inputFilePath = inputFilePath;
+        this.outputFilePath = outputFilePath;
+        this.width = width;
+        this.height = height;
+        this.fileDeleter = new FileDeleter();
     }
 
     resize(onSuccess, onError) {
-        const validationError = this.validateDimensions(this.width, this.height)
+        const validationError = this.validateDimensions(this.width, this.height);
         if (validationError) {
-            onError(new Error(validationError))
-            return
+            onError(new Error(validationError));
+            return;
         }
 
-        ffmpeg(this.inputFilePath)
+        const ffmpegProcess = this.createFfmpegProcess(onSuccess, onError);
+        this.runFfmpegProcess(ffmpegProcess);
+    }
+
+    createFfmpegProcess(onSuccess, onError) {
+        return ffmpeg(this.inputFilePath)
             .size(`${this.width}x${this.height}`)
             .outputOptions('-movflags', 'faststart') // Ensure moov atom is at the beginning of the file for streaming
             .output(this.outputFilePath)
-            .on('end', () => {
-                console.log(`Video successfully resized and saved as ${this.outputFilePath}`)
-                onSuccess(this.outputFilePath)
-                this.fileDeleter.deleteAllFiles() // Delete all temporary files
-            })
-            .on('error', (err) => {
-                console.error('Error resizing video:', err)
-                onError(err)
-            })
-            .run()
+            .on('end', () => this.handleFfmpegEnd(onSuccess))
+            .on('error', (err) => this.handleFfmpegError(err, onError));
+    }
+
+    runFfmpegProcess(ffmpegProcess) {
+        ffmpegProcess.run();
+    }
+
+    handleFfmpegEnd(onSuccess) {
+        console.log(`Video successfully resized and saved as ${this.outputFilePath}`);
+        onSuccess(this.outputFilePath);
+        this.fileDeleter.deleteAllFiles(); // Delete all temporary files
+    }
+
+    handleFfmpegError(err, onError) {
+        console.error('Error resizing video:', err.message);
+        onError(err);
     }
 
     validateDimensions(width, height) {
         if (!width || !height) {
-            return 'Width and height must be specified.'
+            return 'Width and height must be specified.';
         }
 
         if (isNaN(width) || isNaN(height)) {
-            return 'Width and height must be numbers.'
+            return 'Width and height must be numbers.';
         }
 
         if (width <= 0 || height <= 0) {
-            return 'Width and height must be positive numbers.'
+            return 'Width and height must be positive numbers.';
         }
 
-        return null
+        return null;
     }
 }
 
-export default VideoResizer
+export default VideoResizer;
