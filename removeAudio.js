@@ -1,38 +1,41 @@
-import ffmpeg from 'fluent-ffmpeg'
-import FileDeleter from './deleteTempFiles.js'
-
+import ffmpeg from 'fluent-ffmpeg';
+import FileDeleter from './deleteTempFiles.js';
 
 class AudioRemover {
     constructor(inputFilePath, outputFilePath) {
-        this.inputFilePath = inputFilePath
-        this.outputFilePath = outputFilePath
-        this.fileDeleter = new FileDeleter()
+        this.inputFilePath = inputFilePath;
+        this.outputFilePath = outputFilePath;
+        this.fileDeleter = new FileDeleter();
     }
 
     removeAudio(onSuccess, onError) {
-        
-        ffmpeg(this.inputFilePath)
+        this.initializeFfmpegProcess(onSuccess, onError).run();
+    }
+
+    initializeFfmpegProcess(onSuccess, onError) {
+        return ffmpeg(this.inputFilePath)
             .noAudio()
             .outputOptions('-movflags', 'faststart') // Ensure moov atom is at the beginning of the file for streaming
             .output(this.outputFilePath)
+            .on('start', this.onFfmpegStart)
+            .on('end', () => this.onFfmpegEnd(onSuccess))
+            .on('error', (err) => this.onFfmpegError(err, onError));
+    }
 
-            .on('start', (commandLine) => {
-                console.log(`Spawned FFmpeg with command: ${commandLine}`)
-            })
+    onFfmpegStart(commandLine) {
+        console.log(`Spawned FFmpeg with command: ${commandLine}`);
+    }
 
-            .on('end', () => {
-                console.log(`Audio successfully removed and saved as ${this.outputFilePath}`)
-                onSuccess(this.outputFilePath)
-                this.fileDeleter.deleteAllFiles() // Delete all temporary files
-            })
+    onFfmpegEnd(onSuccess) {
+        console.log(`Audio successfully removed and saved as ${this.outputFilePath}`);
+        onSuccess(this.outputFilePath);
+        this.fileDeleter.deleteAllFiles(); // Delete all temporary files
+    }
 
-            .on('error', (err) => {
-                console.error('Error removing audio:', err.message)
-                onError(err)
-            })
-
-            .run()
+    onFfmpegError(err, onError) {
+        console.error('Error removing audio:', err.message);
+        onError(err);
     }
 }
 
-export default AudioRemover
+export default AudioRemover;
