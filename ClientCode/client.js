@@ -130,7 +130,7 @@ class Client {
   /**
    * Saves the response data to a file.
    *
-   * @param {Object} response - The response object containing the data.
+   * @param {object} response - The response object containing the data.
    * @param {string} outputFilePath - The path to save the output file.
    * @returns {Promise<void>} - A promise that resolves when the file is saved.
    */
