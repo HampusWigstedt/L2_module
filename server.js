@@ -33,7 +33,7 @@ class Server {
   /**
    * Configures Multer for file uploads.
    *
-   * @returns {Object} - The configured Multer instance.
+   * @returns {object} - The configured Multer instance.
    */
   configureMulter () {
     const storage = multer.diskStorage({
@@ -46,8 +46,8 @@ class Server {
   /**
    * Sets the upload destination for Multer.
    *
-   * @param {Object} req - The request object.
-   * @param {Object} file - The file object.
+   * @param {object} req - The request object.
+   * @param {object} file - The file object.
    * @param {Function} cb - The callback function.
    */
   setUploadDestination (req, file, cb) {
@@ -57,8 +57,8 @@ class Server {
   /**
    * Sets the upload filename for Multer.
    *
-   * @param {Object} req - The request object.
-   * @param {Object} file - The file object.
+   * @param {object} req - The request object.
+   * @param {object} file - The file object.
    * @param {Function} cb - The callback function.
    */
   setUploadFilename (req, file, cb) {
@@ -81,8 +81,8 @@ class Server {
   /**
    * Handles the root request.
    *
-   * @param {Object} req - The request object.
-   * @param {Object} res - The response object.
+   * @param {object} req - The request object.
+   * @param {object} res - The response object.
    */
   handleRootRequest (req, res) {
     res.send('Welcome to the MP4 to MP3 conversion API. Use POST /convert to upload a file.')
