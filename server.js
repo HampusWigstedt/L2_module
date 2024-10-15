@@ -5,43 +5,17 @@ import Converter from './converter.js'
 import MetaData from './metaData.js'
 import FileHandler from './handlers.js'
 
-// Configure multer storage
-const storage = multer.diskStorage({
-  /**
-   *
-   * @param req
-   * @param file
-   * @param cb
-   */
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/') // Setting the destination directory for uploaded files
-  },
-  /**
-   *
-   * @param req
-   * @param file
-   * @param cb
-   */
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname)
-    cb(null, `${file.fieldname}-${Date.now()}${ext}`) // Setting the filename with a timestamp
-  }
-})
-
-const upload = multer({ storage })
-
 /**
- *
+ * Server class to handle file conversion and metadata operations.
  */
 class Server {
   /**
-   *
+   * Initializes a new instance of the Server class.
    */
   constructor () {
     this.app = express()
-    this.app.use(express.json({ limit: '100mb' })) // Adding middleware to parse JSON requests with a size limit
-    this.app.use(express.urlencoded({ limit: '100mb', extended: true })) // Adding middleware to parse URL-encoded requests with a size limit
-    this.upload = upload
+    this.configureMiddleware()
+    this.upload = this.configureMulter()
     this.converter = new Converter()
     this.metaData = new MetaData()
     this.fileHandler = new FileHandler(this.converter, this.metaData)
@@ -49,29 +23,75 @@ class Server {
   }
 
   /**
+   * Configures middleware for the Express app.
+   */
+  configureMiddleware () {
+    this.app.use(express.json({ limit: '100mb' }))
+    this.app.use(express.urlencoded({ limit: '100mb', extended: true }))
+  }
+
+  /**
+   * Configures Multer for file uploads.
    *
+   * @returns {Object} - The configured Multer instance.
+   */
+  configureMulter () {
+    const storage = multer.diskStorage({
+      destination: this.setUploadDestination,
+      filename: this.setUploadFilename
+    })
+    return multer({ storage })
+  }
+
+  /**
+   * Sets the upload destination for Multer.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} file - The file object.
+   * @param {Function} cb - The callback function.
+   */
+  setUploadDestination (req, file, cb) {
+    cb(null, 'uploads/')
+  }
+
+  /**
+   * Sets the upload filename for Multer.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} file - The file object.
+   * @param {Function} cb - The callback function.
+   */
+  setUploadFilename (req, file, cb) {
+    const ext = path.extname(file.originalname)
+    cb(null, `${file.fieldname}-${Date.now()}${ext}`)
+  }
+
+  /**
+   * Sets up the routes for the Express app.
    */
   setupRoutes () {
-    this.app.get('/', this.handleRootRequest.bind(this))
+    this.app.get('/', this.handleRootRequest)
     this.app.post('/convert', this.upload.single('file'), this.fileHandler.handleFileConversion.bind(this.fileHandler))
     this.app.post('/metadata', this.upload.single('file'), this.fileHandler.handleFileMetadata.bind(this.fileHandler))
-    this.app.post('/StereoToSurround', this.upload.single('file'), this.fileHandler.handleStereoToSurround.bind(this.fileHandler))
+    this.app.post('/stereoToSurround', this.upload.single('file'), this.fileHandler.handleStereoToSurround.bind(this.fileHandler))
     this.app.post('/resize', this.upload.single('file'), this.fileHandler.handleResizeVideo.bind(this.fileHandler))
     this.app.post('/removeaudio', this.upload.single('file'), this.fileHandler.handleRemoveAudio.bind(this.fileHandler))
   }
 
   /**
+   * Handles the root request.
    *
-   * @param req
-   * @param res
+   * @param {Object} req - The request object.
+   * @param {Object} res - The response object.
    */
   handleRootRequest (req, res) {
     res.send('Welcome to the MP4 to MP3 conversion API. Use POST /convert to upload a file.')
   }
 
   /**
+   * Starts the server on the specified port.
    *
-   * @param port
+   * @param {number} port - The port number to start the server on.
    */
   startServer (port) {
     this.app.listen(port, () => {
